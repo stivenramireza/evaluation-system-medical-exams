@@ -1,4 +1,4 @@
-# Simulación de un Sistema de Evaluación de Exámenes Médicos
+# Sistema de Evaluación de Exámenes Médicos
 
 Práctica final del curso de Sistemas Operativos de la Universidad EAFIT para el 2019-1.
 
