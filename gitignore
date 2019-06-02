@@ -1,2 +1,3 @@
-*.vscode
-evaluator/bin/*
+./evaluador/.vscode/*
+./evaluador/bin/*
+./evaluador/build/*
