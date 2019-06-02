@@ -1,16 +1,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
+#include "..\include\command_init.h"
 
 using namespace std;
-
-void command_init(char* commands[], int* length){
-    int i=5, ie=6, oe=10, b=100, d=100, s=100, q=6;
-    char n[] = "evaluator";
-    if (*length == 2){
-        cout<<"ok\n";
-    }
-}
 
 void eval_command(char* commands[], int* length){
     char* current_command = commands[1];
