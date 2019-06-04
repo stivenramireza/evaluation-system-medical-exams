@@ -1,7 +1,13 @@
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
+#include <unistd.h>
+#include <sys/types.h>
 #include "share_memory.h"
+
 using namespace std;
 
 void command_init(char* commands[], int* length){
@@ -69,7 +75,35 @@ void command_init(char* commands[], int* length){
             }
         }
     }
-    cout<<i<<endl<<ie<<endl<<oe<<endl<<n<<endl<<b<<endl<<d<<endl<<s<<endl<<q<<endl;
+    
+    shared_memory* shm = new shared_memory(i,ie,oe,q,b,d,s);
+
+    int fd = shm_open(n, O_RDWR | O_CREAT | O_EXCL, 0660);
+    if (fd < 0) {
+        cerr << "Error creando la memoria compartida: "<< endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (ftruncate(fd, sizeof(shm)) != 0) {
+        cerr << "Error creando la memoria compartida: "
+	    << errno << strerror(errno) << endl;
+        exit(EXIT_FAILURE);
+  }
+    void *dir;
+    if ((dir = mmap(NULL, sizeof(shm), PROT_READ | PROT_WRITE, MAP_SHARED,
+		fd, 0)) == MAP_FAILED) {
+        cerr << "Error mapeando la memoria compartida: "
+	    << errno << strerror(errno) << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    shared_memory *pBuffer = (shared_memory * )dir;
+
+    *pBuffer = *shm;
+
+    cout<<pBuffer->i;
+    
+    close(fd);
 }
 
 void eval_command(char* commands[], int* length){
