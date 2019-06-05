@@ -5,12 +5,12 @@
 
 using namespace std;
 
-struct shared_memory{
-    int i,ie,oe,q,b,d,s;
-    int** input,types;
-    int* output,pts_first;
-    sem_t** semaphores;
+struct exam{
+    int id,pila;
+    char type;
+};
 
-    shared_memory(int i, int ie, int oe,int q,int b,int d,int s):i(i),ie(ie),oe(oe),q(q),b(b),d(d),s(s){        
-    }
+struct head{
+    int i,ie,oe,b,d,s,q,input_exit,output_exit;
+    char n[30];
 };
