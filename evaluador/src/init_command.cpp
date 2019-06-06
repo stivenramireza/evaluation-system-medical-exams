@@ -98,28 +98,22 @@ void command_init(char* commands[], int* length){
     cout<<pHead<<endl;
     cout<<dir<<endl;
 
+    cout<<"Examen"<<endl;
+    exam* pExam;
+    char* dir_entradas = (char *)dir + size_head;
     for(int it=0; it<i; it++){
         for(int it2=0; it2<ie; it2++){
-            if ((dir = mmap(0,size_exam, PROT_READ | PROT_WRITE, MAP_SHARED,
-		        fd, 0)) == MAP_FAILED) {
-                cerr << "Error mapeando la memoria compartida: "
-	            << errno << strerror(errno) << endl;
-                exit(EXIT_FAILURE);
-            }
+            pExam = (exam *)(dir_entradas + it*i*size_exam + it2*size_exam);
+            pExam->id = 1000*it + it2;
+            cout<<&(pExam->id)<<endl<<pExam->id<<endl;
         }
     }
-
     for(int it=0; it<oe; it++){
-        if ((dir = mmap(0,size_exam, PROT_READ | PROT_WRITE, MAP_SHARED,
-		        fd, 0)) == MAP_FAILED) {
-                cerr << "Error mapeando la memoria compartida: "
-	            << errno << strerror(errno) << endl;
-                exit(EXIT_FAILURE);
-            }
+            pExam = (exam *)(dir_entradas + it*size_exam);
+            cout<<pExam<<endl;
+            pExam->id = 100*it;
+            cout<<&(pExam->id)<<endl<<pExam->id<<endl;
+            
     }
-    exam *pExam = (exam *)dir;
-    cout<<"Examen"<<endl;
-    cout<<&(pExam->id)<<endl;
-    cout<<pExam<<endl;
     close(fd);
 }
