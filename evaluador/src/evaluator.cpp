@@ -19,15 +19,15 @@ void eval_command(char* commands[], int* length){
     if (strcmp(current_command,"init") == 0){
         command_init(commands,length);
     }else if (strcmp(current_command,"reg") == 0){
-        cout<<"Reg in progress\n";
-    }else if (strcmp(current_command,"ctrl") == 0){
-        command_ctlr(commands, length);
+        cout<<"reg command in progress\n";
+    }else if (strcmp(current_command,"ctlr") == 0){
+        command_ctlr(commands,length);
     }else if (strcmp(current_command,"rep") == 0){
-        command_rep(commands, length);
+        cout<<"rep command in progress\n";
     }else if(strcmp(current_command, "stop") == 0){
-        command_stop(commands, length);
+        cout<<"stop command in progress\n";
     }else{
-        cerr<<"Command" << current_command << " not found\n";
+        cerr<<"Command " << current_command << " not found\n";
         exit(EXIT_FAILURE);
     }
 }
