@@ -8,6 +8,9 @@
 #include <sys/types.h>
 #include "share_memory.h"
 #include "init_command.h"
+#include "ctlr_command.h"
+#include "rep_command.h"
+#include "stop_command.h"
 
 using namespace std;
 

@@ -8,7 +8,7 @@ CXXFLAGS := -pedantic-errors -Wall -Wextra -std=c++11 -lrt -pthread -I include
 all: dirs $(BINDIR)/evaluator
 VPATH := src include build
 
-$(BINDIR)/evaluator: evaluator.o init_command.o
+$(BINDIR)/evaluator: evaluator.o init_command.o ctlr_command.o rep_command.o stop_command.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(BUILDDIR)/evaluator.o: evaluator.cpp share_memory.h
@@ -16,6 +16,16 @@ $(BUILDDIR)/evaluator.o: evaluator.cpp share_memory.h
 	
 $(BUILDDIR)/init_command.o: init_command.cpp init_command.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+$(BUILDDIR)/ctlr_command.o: ctlr_command.cpp ctlr_command.h
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+$(BUILDDIR)/rep_command.o: rep_command.cpp rep_command.h
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+$(BUILDDIR)/stop_command.o: stop_command.cpp stop_command.h
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
 .PHONY: clean
 
 clean:
