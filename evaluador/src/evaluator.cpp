@@ -18,11 +18,11 @@ void eval_command(char* commands[], int* length){
     }else if (strcmp(current_command,"reg") == 0){
         cout<<"Reg in progress\n";
     }else if (strcmp(current_command,"ctrl") == 0){
-        cout<<"Ctlr in progress\n";
+        command_ctlr(commands, length);
     }else if (strcmp(current_command,"rep") == 0){
-        cout<<"Rep in progress\n";
+        command_rep(commands, length);
     }else if(strcmp(current_command, "stop") == 0){
-        cout<<"Stop in progress\n";
+        command_stop(commands, length);
     }else{
         cerr<<"Command" << current_command << " not found\n";
         exit(EXIT_FAILURE);
