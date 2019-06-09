@@ -12,6 +12,7 @@ void command_rep(char* commands[], int* length){
         for(int it=2; it<*length; it+=2){
             if(strcmp(commands[it],"-n")==0){
                 n = commands[it+1];
+                cout << "n: " << n << endl;
             }
             if(strcmp(commands[it],"-i")==0){
                 i = stoi(commands[it+1]);

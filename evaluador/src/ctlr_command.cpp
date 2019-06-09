@@ -2,7 +2,6 @@
 
 void command_ctlr(char* commands[], int length){
     char *n = (char*)"evaluator";
-    bool isN = false;
     string line;
     if (length == 2){
     }
@@ -13,12 +12,11 @@ void command_ctlr(char* commands[], int length){
         for(int it=2; it<length; it+=2){
             if(strcmp(commands[it],"-n")==0){
                 n = commands[it+1]; 
-                isN = true;
             }
         }
     }
-    if(isN){
-       while(!cin.eof()){
+
+    while(!cin.eof()){
            cout << "> ";
            getline(cin, line);
            stringstream ss(line);
@@ -39,7 +37,6 @@ void command_ctlr(char* commands[], int length){
            }else{
                cerr << "Subcommand invalid\n";
            }
-       }
     }
 }
 
