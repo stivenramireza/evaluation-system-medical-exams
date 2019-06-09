@@ -10,8 +10,12 @@ void command_stop(char* commands[], int* length){
     }else{
         for(int it=2; it<*length; it+=2){
             if(strcmp(commands[it],"-n")==0){
-                n = commands[it+1]; 
+                n = commands[it+1];
             }
         }
     }
+    //sem_unlink("vacios");
+    //sem_unlink("llenos");
+    //sem_unlink("mutex");
+    //shm_unlink("/buffer");
 }

@@ -1,8 +1,9 @@
 #include "ctlr_command.h"
 
 void command_ctlr(char* commands[], int* length){
-    bool isN = false;
     char *n = (char*)"evaluator";
+    bool isN = false;
+    string interactive_command;
     if (*length == 2){
     }
     else if(*length%2 != 0){
@@ -17,6 +18,12 @@ void command_ctlr(char* commands[], int* length){
         }
     }
     if(isN){
-       // Do subcommands
+       while(!cin.eof()){
+           if (isatty(STDIN_FILENO)){
+                cout << "> ";
+            }
+            getline(cin, interactive_command);
+            cout << interactive_command << endl;
+       }
     }
 }
