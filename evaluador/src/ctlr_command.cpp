@@ -3,7 +3,7 @@
 void command_ctlr(char* commands[], int* length){
     char *n = (char*)"evaluator";
     bool isN = false;
-    string interactive_command;
+    char* interactive_command[2][0];
     if (*length == 2){
     }
     else if(*length%2 != 0){
@@ -18,12 +18,6 @@ void command_ctlr(char* commands[], int* length){
         }
     }
     if(isN){
-       while(!cin.eof()){
-           if (isatty(STDIN_FILENO)){
-                cout << "> ";
-            }
-            getline(cin, interactive_command);
-            cout << interactive_command << endl;
-       }
+       // Interactive command prompt
     }
 }
