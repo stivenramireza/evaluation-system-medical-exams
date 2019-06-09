@@ -76,11 +76,11 @@ void command_init(char* commands[], int* length){
     int size_exam =  sizeof(struct exam);
 
     cout<<size_head <<endl;
-    if (ftruncate(fd, size_head + i*ie*size_exam) != 0) {
+    if (ftruncate(fd, size_head + i * ie * size_exam + 3 * q * size_exam + 2 * i * sizeof(int)) != 0) {
         cerr << "Error creando la memoria compartida: "
 	    << errno << strerror(errno) << endl;
         exit(EXIT_FAILURE);
-  }
+    }
 
     void *dir;
     if ((dir = mmap(NULL, size_head, PROT_READ | PROT_WRITE, MAP_SHARED,
@@ -91,9 +91,11 @@ void command_init(char* commands[], int* length){
     }
 
     head *pHead = (head * )dir;
+    //entrada *pentrada = (entrada * ) ((char *)dir + 5);
     cout<<"Head"<<endl;
     pHead->i = i;
     pHead->ie = ie; 
+    pHead->_uuid = 0;
     cout<<(pHead->i)<<endl;
     cout<<pHead<<endl;
     cout<<dir<<endl;
@@ -121,5 +123,6 @@ void command_init(char* commands[], int* length){
     cout<<"Examen"<<endl;
     cout<<&(pExam->id)<<endl;
     cout<<pExam<<endl;
+
     close(fd);
 }
