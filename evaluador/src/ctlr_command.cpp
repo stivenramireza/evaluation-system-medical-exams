@@ -26,16 +26,19 @@ void command_ctlr(char* commands[], int length){
                if(arguments[1] != ""){
                    subcommand_list(n, arguments[1]);
                }else{
-                   cerr << "Usage: list [ processing | waiting | reported | reactive | all ]\n";
+                   cerr << "Usage: \nlist [ processing | waiting | reported | reactive | all ]\n";
+                   exit(EXIT_FAILURE);
                }
            }else if(arguments[0] == "update"){
                if(arguments[1] != "" && arguments[2] != ""){
-                   subcommand_update(n, arguments[1], stoi(arguments[2]));
+                   subcommand_update(n, arguments[1], arguments[2]);
                }else{
                    cerr << "Usage: update { B | D | S } <integer>\n";
+                   exit(EXIT_FAILURE);
                }
            }else{
                cerr << "Subcommand invalid\n";
+                exit(EXIT_FAILURE);
            }
     }
 }
@@ -54,19 +57,23 @@ void subcommand_list(char* name_memory, string interactive_subcommand){
         subcommand_all(name_memory);
     }else{
         cerr << "Subcommand invalid\n";
+        exit(EXIT_FAILURE);
     }
 }
 
 void subcommand_processing(char* name_memory){
-    cout << "[id i k q p\n]";
+    cout << "Processing:\n";
+    cout << "[id i k q p\n]\n";
 }
 
 void subcommand_waiting(char* name_memory){
-    cout << "[id i k q\n]";
+    cout << "Waiting:\n";
+    cout << "[id i k q\n]\n";
 }
 
 void subcommand_reported(char* name_memory){
-    cout << "[id i k r\n]";
+    cout << "Reported:\n";
+    cout << "[id i k r\n]\n";
 }
 
 void subcommand_reactive(char* name_memory){
@@ -81,9 +88,19 @@ void subcommand_all(char* name_memory){
 }
 
 /** Subcomando update */
-void subcommand_update(char* name_memory, string reactive, int reactive_level){
-    cout << "name_memory: " << name_memory << endl;
-    update_reactive(reactive, reactive_level);
+void subcommand_update(char* name_memory, string reactive, string reactive_level){
+    if(reactive == "B" || reactive == "D" || reactive == "S"){
+        if(reactive_level != ""){
+            cout << "name_memory: " << name_memory;
+            update_reactive(reactive, stoi(reactive_level));
+        }else{
+            cerr<<"subcommand invalid\n";
+            exit(EXIT_FAILURE);
+        }
+    }else{
+        cerr<<"subcommand invalid\n";
+        exit(EXIT_FAILURE);
+    }
 }
 
 void update_reactive(string reactive, int reactive_level){
