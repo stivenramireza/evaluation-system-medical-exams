@@ -12,4 +12,6 @@
 #include <sys/types.h>
 #include "share_memory.h"
 
-void command_ctlr(char* commands[], int* length);
+void command_ctlr(char* commands[], int length);
+void subcommand_list(char* name_memory, string interactive_subcommand1);
+void subcommand_update(char* name_memory, string interactive_subcommand1, int interactive_subcommand2);

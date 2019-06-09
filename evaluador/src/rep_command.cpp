@@ -14,14 +14,14 @@ void command_rep(char* commands[], int* length){
                 n = commands[it+1];
             }
             if(strcmp(commands[it],"-i")==0){
-                i = atoi(commands[it+1]);
+                i = stoi(commands[it+1]);
                 if(i <= 0){
                     cerr<<"-i <integer>"<<endl;
                     exit(EXIT_FAILURE);
                 } 
             }
             if(strcmp(commands[it],"-m")==0){
-                m = atoi(commands[it+1]);
+                m = stoi(commands[it+1]);
                 if(m <= 0){
                     cerr<<"-m <integer>"<<endl;
                     exit(EXIT_FAILURE);

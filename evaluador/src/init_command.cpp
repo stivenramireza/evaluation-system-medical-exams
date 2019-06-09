@@ -27,21 +27,21 @@ void command_init(char* commands[], int length){
     else{
         for(int it=2; it<length; it+=2){
             if(strcmp(commands[it],"-i") == 0){
-                i = atoi(commands[it+1]);
+                i = stoi(commands[it+1]);
                 if(i <= 0){
                     cerr<<"-i <integer>"<<endl;
                     exit(EXIT_FAILURE);
                 }
             }
             else if(strcmp(commands[it],"-ie")==0){
-                ie = atoi(commands[it+1]);
+                ie = stoi(commands[it+1]);
                 if(ie <= 0){
                     cerr<<"-ie <integer>"<<endl;
                     exit(EXIT_FAILURE);
                 }
             }
             else if(strcmp(commands[it],"-oe")==0){
-                oe = atoi(commands[it+1]);
+                oe = stoi(commands[it+1]);
                 if(oe <= 0){
                     cerr<<"-oe <integer>"<<endl;
                     exit(EXIT_FAILURE);
@@ -51,28 +51,28 @@ void command_init(char* commands[], int length){
                 n = commands[it+1];
             }
             else if(strcmp(commands[it],"-b")==0){
-                b = atoi(commands[it+1]);
+                b = stoi(commands[it+1]);
                 if(b <= 0){
                     cerr<<"-b <integer>"<<endl;
                     exit(EXIT_FAILURE);
                 }
             }
             else if(strcmp(commands[it],"-d")==0){
-                d = atoi(commands[it+1]);
+                d = stoi(commands[it+1]);
                 if(d <= 0){
                     cerr<<"-d <integer>"<<endl;
                     exit(EXIT_FAILURE);
                 }
             }
             else if(strcmp(commands[it],"-s")==0){
-                s = atoi(commands[it+1]);
+                s = stoi(commands[it+1]);
                 if(s <= 0){
                     cerr<<"-s <integer>"<<endl;
                     exit(EXIT_FAILURE);
                 }
             }
             else if(strcmp(commands[it],"-q")==0){
-                q = atoi(commands[it+1]);
+                q = stoi(commands[it+1]);
                 if(q <= 0){
                     cerr<<"-q <integer>"<<endl;
                     exit(EXIT_FAILURE);
@@ -125,11 +125,11 @@ void command_init(char* commands[], int length){
 
     pthread_t* inputs_threads = new pthread_t[i];
     
-    sem_t mutex, empty, full;
+    sem_t* mutex, empty, full;
     for(int it = 0; it<i; it++){
-        mutex = sem_open(sem_name, O_CREAT | O_EXCL, 0660,1); 
-        Input_info* info = new Input_info(it, dir);
-        pthread_create(&inputs_threads[it],NULL,input_thread,(void *) info);
+        mutex = sem_open("sem_name", O_CREAT | O_EXCL, 0660,1); 
+        //Input_info* info = new Input_info(it, dir);
+        //pthread_create(&inputs_threads[it],NULL,input_thread,(void *) info);
     }
 }
 
