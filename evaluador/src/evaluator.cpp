@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void eval_command(char* commands[], int* length){
+void eval_command(char* commands[], int length){
     char* current_command = commands[1];
     if (strcmp(current_command,"init") == 0){
         command_init(commands,length);
@@ -33,6 +33,6 @@ void eval_command(char* commands[], int* length){
 
 int
 main(int argc, char* argv[]){
-    eval_command(argv,&argc);
+    eval_command(argv,argc);
     exit(EXIT_SUCCESS);
 }
