@@ -61,9 +61,50 @@ void subcommand_list(char* name_memory, string interactive_subcommand){
 }
 
 void subcommand_processing(char* name_memory){
-    cout << "name_memory: " << name_memory << endl;
-    cout << "Processing:\n";
-    cout << "[id i k q p\n]\n";
+    int fd = shm_open(name_memory, O_RDWR, 0660);
+    void *dir = mmap(NULL, sizeof(struct head), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    head *phead = (head *) dir;
+    int _ie_ = phead->ie;
+    int _i_ =  phead->i;
+    int _q_ =  phead->q;
+    int _oe_ = phead->oe;
+    int exam_size = sizeof(struct exam);
+    int size_head =  sizeof(struct head);
+    char* inputs_dirs = (char *)dir + size_head;
+  
+    int qua_1 = phead->qua_b;
+    int cont_1 = phead->first_b;
+    while(cont_1 != phead->end_b || qua_1 > 0){
+        exam *_exam = (exam *) (inputs_dirs + (_ie_ * _i_ * exam_size) + _oe_*exam_size + (cont_1 * exam_size));
+        time(&_exam->t_end);
+        double seconds = difftime(_exam->t_end, _exam->t_start);
+        cout << "Processing:\n";
+        cout << _exam->id << " " << _exam->_queue << " " << _exam->type << " " << _exam->_quant << " " << seconds << endl;
+        cont_1 = (cont_1 + 1) % _q_;
+        qua_1--;
+    }
+    int qua_2 = phead->qua_d;
+    int cont_2 = phead->first_d;
+    while(cont_2 != phead->end_d || qua_2 > 0){
+        exam *_exam = (exam *) (inputs_dirs + (_ie_ * _i_ * exam_size) + _oe_*exam_size + (cont_2 * exam_size) + _q_*exam_size);
+        time(&_exam->t_end);
+        double seconds = difftime(_exam->t_end, _exam->t_start);
+        cout << "Processing:\n";
+        cout << _exam->id << " " << _exam->_queue << " " << _exam->type << " " << _exam->_quant << " " << seconds<< endl;
+        cont_2 = (cont_2 + 1) % _q_;
+        qua_2--;
+    }   
+    int qua_3 = phead->qua_s;
+    int cont_3 = phead->first_s;
+    while(cont_3 != phead->end_s || qua_3 > 0){
+        exam *_exam = (exam *) (inputs_dirs + (_ie_ * _i_ * exam_size) + _oe_*exam_size + (cont_3* exam_size) + 2*_q_*exam_size);
+        time(&_exam->t_end);
+        double seconds = difftime(_exam->t_end, _exam->t_start);
+        cout << "Processing:\n";
+        cout << _exam->id << " " << _exam->_queue << " " << _exam->type << " " << _exam->_quant << " " << seconds << endl;
+        cont_3 = (cont_3 + 1) % _q_;
+        qua_3--;
+    }
 }
 
 void subcommand_waiting(char* name_memory){
@@ -95,14 +136,44 @@ void subcommand_waiting(char* name_memory){
 }
 
 void subcommand_reported(char* name_memory){
-    cout << "name_memory: " << name_memory << endl;
-    cout << "Reported:\n";
-    cout << "[id i k r\n]\n";
+    int fd = shm_open(name_memory, O_RDWR, 0660);
+    void *dir = mmap(NULL, sizeof(struct head), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    head *phead = (head *) dir;
+    int _ie_ = phead->ie;
+    int _i_ =  phead->i;
+    int _q_ =  phead->q;
+    int _oe_ = phead->oe;
+    int exam_size = sizeof(struct exam);
+    int size_head =  sizeof(struct head);
+    char* inputs_dirs = (char *)dir + size_head;
+    int in = phead->first_o;
+    int last  = phead->end_o;
+    int quantum = phead->qua_o;
+    while(in != last || quantum > 0){
+        exam *_exam = (exam *) (inputs_dirs + (_ie_ * _i_ * exam_size) + (in * exam_size));
+        cout << "Reported:\n";
+        char state;
+        if(_exam->_state <= 15){
+            state = '?';
+        }else if(_exam->_state <= 35){
+            state = 'N';
+        }else{
+            state = 'P';
+        }
+        cout << _exam->id << " " << _exam->_queue << " " << _exam->type << " " << state << endl;
+        in = (in + 1) % _oe_;
+        quantum--;
+    }
 }
 
 void subcommand_reactive(char* name_memory){
-    cout << "name_memory: " << name_memory << endl;
-    cout << 100 << endl;;
+    int fd = shm_open(name_memory, O_RDWR, 0660);
+    void *dir = mmap(NULL, sizeof(struct head), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    head *phead = (head *) dir;
+    int _b = phead->b;
+    int _d = phead->d;
+    int _s = phead->s;
+    cout << _b << " " << _d << " " << _s << endl;
 }
 
 void subcommand_all(char* name_memory){

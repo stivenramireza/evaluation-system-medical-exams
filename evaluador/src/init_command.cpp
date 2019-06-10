@@ -200,6 +200,7 @@ static void* input_thread(void *input){
         if(type == 'B'){
             sem_wait(b[1]);
             sem_wait(b[0]);
+            time(&current_exam.t_start);
             pinter_q = (exam *)(dir_b + (phead->end_b)*exam_size);
             *pinter_q = current_exam;
             phead->end_b = (phead->end_b + 1)%(phead->q);
@@ -210,6 +211,7 @@ static void* input_thread(void *input){
         else if(type == 'D'){
             sem_wait(d[1]);
             sem_wait(d[0]);
+            time(&current_exam.t_start);
             pinter_q = (exam *)(dir_d + (phead->end_d)*exam_size);
             *pinter_q = current_exam;
             phead->end_d = (phead->end_d + 1)%(phead->q);
@@ -220,6 +222,7 @@ static void* input_thread(void *input){
         else if(type == 'S'){
             sem_wait(s[1]);
             sem_wait(s[0]);
+            time(&current_exam.t_start);
             pinter_q = (exam *)(dir_s + (phead->end_s)*exam_size);
             *pinter_q = current_exam;
             phead->end_s = (phead->end_s + 1)%(phead->q);
@@ -235,7 +238,18 @@ static void* input_thread(void *input){
 
 static void* inter_thread(void * input){
     Input_info_inter* info = (Input_info_inter *) input;
-    cout<<"K";
-    cout<<(info->reactiv);
+    char* 
+    head header = info->header;
+    sem_t *sem = info->sem;
+    sem_wait(sem[2]);
+    sem_wai(sem[0]);
+
+    for(int i; i< header.){
+
+    }
+
+    sem_post(sem[0]);
+    sem_post(sem[1]);
+    
     return NULL;
 }
