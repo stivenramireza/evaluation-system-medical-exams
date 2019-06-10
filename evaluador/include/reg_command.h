@@ -2,6 +2,7 @@
 #include <cstring>
 #include "share_memory.h"
 #include <semaphore.h>
+#include <cstdio>
 using namespace std;
 
 class RegistratorCommand {
@@ -9,7 +10,7 @@ class RegistratorCommand {
         RegistratorCommand(char ** args, int length);
         void start();
     private:
-        void put_sample(int _queue, char _type, int _quant);
+        void put_sample(int _queue, char _type, int _quant, FILE *f, bool file);
         void usage();
         void interactive();
         void files(int _from, char ** _files, int _to);
