@@ -12,24 +12,18 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include "ctlr_command.h"
+#include "rep_command.h"
+#include "stop_command.h"
 
 using namespace std;
 
-void eval_command(char* commands[], int* length){
+void eval_command(char* commands[], int length){
     char* current_command = commands[1];
     if (strcmp(current_command,"init") == 0){
         command_init(commands,length);
     }
     else if (strcmp(current_command,"reg") == 0){
-        for(int i = 0; i < 5; ++i){
-            string _mem_name = "evaluator";
-            string mutex_name = _mem_name + "_input_" + to_string(i).c_str() + "_mutex";
-            string fulls_name = _mem_name + "_input_" + to_string(i).c_str() + "_fulls";
-            string empty_name = _mem_name + "_input_" + to_string(i).c_str() + "_empty";
-            sem_t * new_sem_mutex = sem_open(mutex_name.c_str(), O_CREAT | O_EXCL, 0660, 1);
-            sem_t * new_sem_fulls = sem_open(fulls_name.c_str(), O_CREAT | O_EXCL, 0660, 0);
-            sem_t * new_sem_empty = sem_open(empty_name.c_str(), O_CREAT | O_EXCL, 0660, 6);
-        }
         RegistratorCommand *command = new RegistratorCommand(commands, *length);
         command->start();
         //command->put_sample(0, 0, 0);
@@ -42,6 +36,16 @@ void eval_command(char* commands[], int* length){
     }
     else{
         cerr<<"Command" << current_command << " not found\n";
+    }else if (strcmp(current_command,"reg") == 0){
+        cout<<"reg command in progress\n";
+    }else if (strcmp(current_command,"ctlr") == 0){
+        command_ctlr(commands,length);
+    }else if (strcmp(current_command,"rep") == 0){
+        cout<<"rep command in progress\n";
+    }else if(strcmp(current_command, "stop") == 0){
+        cout<<"stop command in progress\n";
+    }else{
+        cerr<<"Command " << current_command << " not found\n";
         exit(EXIT_FAILURE);
     }
 }
