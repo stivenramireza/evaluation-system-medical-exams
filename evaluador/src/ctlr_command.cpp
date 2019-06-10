@@ -141,7 +141,6 @@ void subcommand_reported(char* name_memory){
     head *phead = (head *) dir;
     int _ie_ = phead->ie;
     int _i_ =  phead->i;
-    int _q_ =  phead->q;
     int _oe_ = phead->oe;
     int exam_size = sizeof(struct exam);
     int size_head =  sizeof(struct head);
