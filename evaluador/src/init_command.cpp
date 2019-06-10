@@ -151,6 +151,12 @@ void command_init(char* commands[], int length){
         Input_info* info = new Input_info(it , dir , mutex , full , empty , _b , _d , _s);
         pthread_create(&inputs_threads[it],NULL,input_thread,(void *) info);
     }
+    string sem_name_mutex = n + "_output_mutex";
+    string sem_name_empty = n + "_output_empty";
+    string sem_name_full  = n + "_output_fulls"; 
+    sem_t *mutex = sem_open(sem_name_mutex.c_str(), O_CREAT | O_EXCL, 0660,1); 
+    sem_t *empty = sem_open(sem_name_empty.c_str(), O_CREAT | O_EXCL, 0660, ie);
+    sem_t *full =  sem_open(sem_name_full.c_str(),  O_CREAT | O_EXCL, 0660, 0);
     pthread_join(inputs_threads[0],NULL);
 }
 
@@ -186,6 +192,7 @@ static void* input_thread(void *input){
         if(type == 'B'){
             sem_wait(b[1]);
             sem_wait(b[0]);
+            time(&current_exam.t_start);
             pinter_q = (exam *)(dir_b + (phead->end_b)*exam_size);
             *pinter_q = current_exam;
             phead->end_b = (phead->end_b + 1)%(phead->q);
@@ -196,6 +203,7 @@ static void* input_thread(void *input){
         else if(type == 'D'){
             sem_wait(d[1]);
             sem_wait(d[0]);
+            time(&current_exam.t_start);
             pinter_q = (exam *)(dir_d + (phead->end_d)*exam_size);
             *pinter_q = current_exam;
             phead->end_d = (phead->end_d + 1)%(phead->q);
@@ -206,6 +214,7 @@ static void* input_thread(void *input){
         else if(type == 'S'){
             sem_wait(s[1]);
             sem_wait(s[0]);
+            time(&current_exam.t_start);
             pinter_q = (exam *)(dir_s + (phead->end_s)*exam_size);
             *pinter_q = current_exam;
             phead->end_s = (phead->end_s + 1)%(phead->q);

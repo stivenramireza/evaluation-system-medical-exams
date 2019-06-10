@@ -41,5 +41,24 @@ void interactive_mode(char* name_memory, int seconds){
 
 void obtener_examenes(char* name_memory, int n_examenes){
     // Consumidor de exámenes
-    cout << "Consume " << n_examenes << " from "  << name_memory << " shared memory"<< endl;
+    int fd = shm_open(name_memory, O_RDWR, 0660);
+    void *dir = mmap(NULL, sizeof(struct head), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    head *phead = (head *) dir;
+    int cantidad = 0;
+    string sem_name_mutex = "_output_mutex";
+    string sem_name_empty = "_output_empty";
+    string sem_name_full  = "_output_fulls"; 
+    sem_name_mutex = name_memory + sem_name_mutex;
+    sem_name_empty = name_memory + sem_name_empty;
+    sem_name_full = name_memory + sem_name_full;
+    mutex = sem_open(sem_name_mutex.c_str(), 0);
+    empty = sem_open(sem_name_empty.c_str(), 0);
+    full = sem_open(sem_name_full.c_str(), 0);
+    while(cantidad < n_examenes){
+        sem_wait(full);
+        sem_wait(mutex);
+
+        sem_post(mutex);
+        sem_post(empty);
+    }
 }
