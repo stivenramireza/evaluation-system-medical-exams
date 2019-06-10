@@ -12,4 +12,4 @@
 #include <sys/types.h>
 #include "share_memory.h"
 
-void command_ctlr(char* commands[], int* length);
+void command_ctlr(char* commands[], int length);

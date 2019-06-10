@@ -17,7 +17,7 @@ static void* input_thread(void * info);
 
 void command_init(char* commands[], int length){
     int i=5, ie=6, oe=10, b=100, d=100, s=100, q=6;
-    char* n = (char *)"evaluator";
+    string n = (char *)"evaluator";
     if (length == 2){
     }
     else if(length%2 != 0){
@@ -81,7 +81,7 @@ void command_init(char* commands[], int length){
         }
     }
     //Create the shared memory  and initialice all the values
-    int fd = shm_open(n, O_RDWR | O_CREAT | O_EXCL, 0660);
+    int fd = shm_open(n.c_str(), O_RDWR | O_CREAT | O_EXCL, 0660);
     if (fd < 0) {
         cerr << "Error creando la memoria compartida: "<< endl;
         exit(EXIT_FAILURE);
@@ -95,7 +95,7 @@ void command_init(char* commands[], int length){
         cerr << "Error creando la memoria compartida: "
 	    << errno << strerror(errno) << endl;
         exit(EXIT_FAILURE);
-    }
+  }
 
     void *dir;
     if ((dir = mmap(NULL, size_head, PROT_READ | PROT_WRITE, MAP_SHARED,
@@ -106,7 +106,6 @@ void command_init(char* commands[], int length){
     }
 
     head *pHead = (head * )dir;
-    //entrada *pentrada = (entrada * ) ((char *)dir + 5);
     pHead->_uuid = 0;
     pHead->i = i;
     pHead->ie = ie;
@@ -124,26 +123,59 @@ void command_init(char* commands[], int length){
     pHead->first_s = 0;
     pHead->end_s = 0;
 
-
     pthread_t* inputs_threads = new pthread_t[i];
+
+    sem_t *_b[3];
+    //b[0] = sem_open(n+"_inter_b_mutex",O_CREAT | O_EXCL, 0660, 1);
+    //b[1] = sem_open(n+"_inter_b_empty",O_CREAT | O_EXCL, 0660, 1);
+    //  b[2] = sem_open(n+"_inter_b_full" ,O_CREAT | O_EXCL, 0660, 1);
+    sem_t *_d[3];
+    sem_t *_s[3];
     
-    sem_t mutex, empty, full;
     for(int it = 0; it<i; it++){
-        mutex = sem_open(sem_name, O_CREAT | O_EXCL, 0660,1); 
-        Input_info* info = new Input_info(it, dir);
+        string sem_name_mutex = n + "_input_" + to_string(it).c_str() + "_mutex";
+        string sem_name_empty = n + "_input_" + to_string(it).c_str() + "_empty";
+        string sem_name_full  = n + "_input_" + to_string(it).c_str() + "_full"; 
+        sem_t *mutex = sem_open(sem_name_mutex.c_str(), O_CREAT | O_EXCL, 0660,1); 
+        sem_t *empty = sem_open(sem_name_empty.c_str(), O_CREAT | O_EXCL, 0660, ie);
+        sem_t *full =  sem_open(sem_name_full.c_str(),  O_CREAT | O_EXCL, 0660, 0);
+        Input_info* info = new Input_info(it , dir , mutex , full , empty , _b , _d , _s);
         pthread_create(&inputs_threads[it],NULL,input_thread,(void *) info);
     }
-    close(fd);
 }
 
 static void* input_thread(void *input){
-    
+    int head_size = sizeof(head);
+    int exam_size = sizeof(exam);
     Input_info* info = (Input_info*) input;
-    head* phead = (head *)info->init_dir;
-    
+    char* init_pos = (char *)info->init_dir;
+    head* phead = (head *)init_pos;
     int input_number = info->input;
     int length_array = phead->ie;
-    
-    
+    int *last  = (int *)(init_pos + head_size + length_array*(phead->i)*exam_size+3*(phead->q) + phead->i*sizeof(int) + input_number*sizeof(int));
+    sem_t *mutex = info->mutex;
+    sem_t *empty = info->empty;
+    sem_t *full  = info->full;
+    char *input_array = init_pos + head_size + input_number*length_array*exam_size;
+    exam current_exam;
+    for(;;){
+        sem_wait(full);
+        sem_wait(mutex);
+        current_exam = *((exam *) (input_array + *last*exam_size));
+        cout<<"Pila "<<current_exam.id<<endl;
+        char type = current_exam.type;
+        if(type == 'b'){
+
+        }
+        else if(type == 'd'){
+
+        }
+        else if(type == 's'){
+
+        }
+        sem_post(mutex);
+        sem_post(empty);
+    }
+
     return NULL;
-} 
+}   
