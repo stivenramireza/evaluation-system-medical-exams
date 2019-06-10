@@ -1,6 +1,7 @@
 #include <vector>
 #include <cstring>
 #include "share_memory.h"
+#include <semaphore.h>
 using namespace std;
 
 class RegistratorCommand {

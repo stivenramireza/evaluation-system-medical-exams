@@ -135,7 +135,7 @@ void command_init(char* commands[], int length){
     for(int it = 0; it<i; it++){
         string sem_name_mutex = n + "_input_" + to_string(it).c_str() + "_mutex";
         string sem_name_empty = n + "_input_" + to_string(it).c_str() + "_empty";
-        string sem_name_full  = n + "_input_" + to_string(it).c_str() + "_full"; 
+        string sem_name_full  = n + "_input_" + to_string(it).c_str() + "_fulls"; 
         sem_t *mutex = sem_open(sem_name_mutex.c_str(), O_CREAT | O_EXCL, 0660,1); 
         sem_t *empty = sem_open(sem_name_empty.c_str(), O_CREAT | O_EXCL, 0660, ie);
         sem_t *full =  sem_open(sem_name_full.c_str(),  O_CREAT | O_EXCL, 0660, 0);

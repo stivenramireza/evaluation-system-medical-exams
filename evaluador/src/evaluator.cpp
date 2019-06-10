@@ -22,22 +22,10 @@ void eval_command(char* commands[], int length){
     char* current_command = commands[1];
     if (strcmp(current_command,"init") == 0){
         command_init(commands,length);
-    }
-    else if (strcmp(current_command,"reg") == 0){
-        RegistratorCommand *command = new RegistratorCommand(commands, *length);
+    }else if(strcmp(current_command,"reg") == 0){
+        RegistratorCommand *command = new RegistratorCommand(commands, length);
         command->start();
         //command->put_sample(0, 0, 0);
-    }
-    else if (strcmp(current_command,"ctrl") == 0){
-        cout<<"ok3\n";
-    }
-    else if (strcmp(current_command,"rep") == 0){
-        cout<<"ok4\n";
-    }
-    else{
-        cerr<<"Command" << current_command << " not found\n";
-    }else if (strcmp(current_command,"reg") == 0){
-        cout<<"reg command in progress\n";
     }else if (strcmp(current_command,"ctlr") == 0){
         command_ctlr(commands,length);
     }else if (strcmp(current_command,"rep") == 0){
@@ -59,7 +47,7 @@ main(int argc, char* argv[]){
         printf("Error\n");
         exit(EXIT_FAILURE);
     }
-    eval_command(argv,&argc);
+    eval_command(argv, argc);
     exit(EXIT_SUCCESS);
 }
 
