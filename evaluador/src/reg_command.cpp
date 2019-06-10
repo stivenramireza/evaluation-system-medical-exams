@@ -67,6 +67,7 @@ void RegistratorCommand::put_sample(int _queue, char ntype, int _quantity){
     int _ie_ = phead->ie;
     int _i_ =  phead->i;
     int _q_ =  phead->q;
+    int _oe_ = phead->oe;
     int _uuid = phead->_uuid;
     int exam_size = sizeof(struct exam);
     int size_head =  sizeof(struct head);
@@ -76,10 +77,12 @@ void RegistratorCommand::put_sample(int _queue, char ntype, int _quantity){
     //char *inputs_dirs = 0;
     sem_wait(reg_sems_empty[_queue]);
     sem_wait(reg_sems_mutex[_queue]);
-    int *in = (int *)(inputs_dirs + _i_ * _ie_ * exam_size + 3 * _q_ * exam_size + _queue * sizeof(int));
+    int *in = (int *)(inputs_dirs + _i_ * _ie_ * exam_size + _oe_*exam_size + 3 * _q_ * exam_size + _queue * sizeof(int));
+    int *quantum = (int *)(inputs_dirs + _i_ * _ie_ * exam_size + _oe_*exam_size + 3 * _q_ * exam_size + _i_ * sizeof(int) + _i_ * sizeof(int) + _queue * sizeof(int));
     //cerr << *in << endl;
     exam *_exam = (exam *) (inputs_dirs + (_ie_ * _queue * exam_size) + (*in * exam_size));
     *in = (*in + 1) % _ie_;
+    *quantum = *quantum + 1;
     _exam->id = _uuid;
     _exam->_queue = _queue;
     _exam->_quant = _quantity;
@@ -135,7 +138,6 @@ void RegistratorCommand::start(){
                 pExam->_queue = -1;
                 pExam->_quant = -1;
                 pExam->_state = -1;
-                //cout<<&(pExam->id)<<endl<<pExam->id<<endl;
             }
         }
         files(_from, _args, _to);

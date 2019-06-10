@@ -90,7 +90,7 @@ void command_init(char* commands[], int length){
     int size_head =  sizeof(struct head);
     int size_exam =  sizeof(struct exam);
     
-    int size_memory = size_head + i*ie*size_exam + oe*size_exam + q*3*size_exam + sizeof(int)*2*i; 
+    int size_memory = size_head + i*ie*size_exam + oe*size_exam + q*3*size_exam + sizeof(int)*3*i; 
     if (ftruncate(fd, size_memory) != 0) {
         cerr << "Error creando la memoria compartida: "
 	    << errno << strerror(errno) << endl;
@@ -152,7 +152,8 @@ static void* input_thread(void *input){
     head* phead = (head *)init_pos;
     int input_number = info->input;
     int length_array = phead->ie;
-    int *last  = (int *)(init_pos + head_size + length_array*(phead->i)*exam_size+3*(phead->q) + phead->i*sizeof(int) + input_number*sizeof(int));
+    int *last  = (int *)(init_pos + head_size + length_array*(phead->i)*exam_size + (phead->oe)*exam_size +3*(phead->q)*exam_size + phead->i*sizeof(int) + input_number*sizeof(int));
+    int *quantum  = (int *)(init_pos + head_size + length_array*(phead->i)*exam_size + (phead->oe)*exam_size +3*(phead->q)*exam_size + phead->i*sizeof(int) + phead->i*sizeof(int) + + input_number*sizeof(int));
     sem_t *mutex = info->mutex;
     sem_t *empty = info->empty;
     sem_t *full  = info->full;
@@ -164,6 +165,7 @@ static void* input_thread(void *input){
         current_exam = *((exam *) (input_array + *last*exam_size));
         cout<<"Pila "<<current_exam.id<<endl;
         *last = (*last + 1) % length_array;
+        *quantum = *quantum - 1;
         char type = current_exam.type;
         if(type == 'b'){
 

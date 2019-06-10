@@ -67,10 +67,31 @@ void subcommand_processing(char* name_memory){
 }
 
 void subcommand_waiting(char* name_memory){
-    cout << "name_memory: " << name_memory << endl;
-    
-    cout << "Waiting:\n";
-    cout << "[id i k q\n]\n";
+    int fd = shm_open(name_memory, O_RDWR, 0660);
+    void *dir = mmap(NULL, sizeof(struct head), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    head *phead = (head *) dir;
+    int _ie_ = phead->ie;
+    int _i_ =  phead->i;
+    int _q_ =  phead->q;
+    int _oe_ = phead->oe;
+    int exam_size = sizeof(struct exam);
+    int size_head =  sizeof(struct head);
+    char* inputs_dirs = (char *)dir + size_head;
+    for(int _queue = 0; _queue < _i_ ; _queue++){
+        int *in = (int *)(inputs_dirs + _i_ * _ie_ * exam_size + _oe_*exam_size + 3 * _q_ * exam_size + _queue * sizeof(int));
+        int *last  = (int *)(inputs_dirs + _ie_*_i_*exam_size + _oe_*exam_size + 3*_q_*exam_size + _i_*sizeof(int) + _queue*sizeof(int));
+        int *quantum = (int *)(inputs_dirs + _i_ * _ie_ * exam_size + _oe_*exam_size + 3 * _q_ * exam_size + _i_ * sizeof(int) + _i_ * sizeof(int) + _queue * sizeof(int));
+        int first = *last;
+        int ultimate = *in;
+        int cantidad = *quantum;
+        while(first != ultimate || cantidad > 0){
+            exam *_exam = (exam *) (inputs_dirs + (_ie_ * _queue * exam_size) + (first * exam_size));
+            cout << "Waiting:\n";
+            cout << _exam->id << " " << _exam->_queue << " " << _exam->type << " " << _exam->_quant << endl;
+            first = (first + 1) % _ie_;
+            cantidad--;
+        }
+    }
 }
 
 void subcommand_reported(char* name_memory){
