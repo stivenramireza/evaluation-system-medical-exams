@@ -89,6 +89,7 @@ void RegistratorCommand::put_sample(int _queue, char ntype, int _quantity){
     sem_post(reg_sems_fulls[_queue]);
 }
 void RegistratorCommand::usage(){
+    
     printf("Usage: \n\tevaluator reg [-n string] {{file} | ... }\n");
 }
 void RegistratorCommand::files(int from, char ** files, int to){
