@@ -68,27 +68,9 @@ void subcommand_processing(char* name_memory){
 
 void subcommand_waiting(char* name_memory){
     cout << "name_memory: " << name_memory << endl;
-    fd = shm_open(name_memory, O_RDWR, 0660);
-    dir = mmap(NULL, sizeof(struct head), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    head *phead = (head *) dir;
-    int size_exam =  sizeof(struct exam);
-    int size_head =  sizeof(struct head);
-    char* dir_entradas = (char *)dir + size_head;
-    exam* pExam;
-    for(int it = 0; it < _i_; it++){
-            for(int it2 = 0; it2 < _ie_; it2 ++){
-                //printf("%d ", it2);
-                exam * pExamp = (exam *)(dir_entradas + _i_ * it * size_exam + it2 * size_exam);
-                if(pExamp->id != -1){
-                    cout << pExamp << endl;
-                    cout << size_exam << endl;
-                    cout << "Waiting:\n";
-                    cout << "[" << pExamp->id << " " << pExamp->_queue << " " << pExamp->type << " " << pExamp->_quant << "\n" << "]" << "\n" << endl;
-                }
-            }
-        }
-    //cout << "Waiting:\n";
-    //cout << "[id i k q\n]\n";
+    
+    cout << "Waiting:\n";
+    cout << "[id i k q\n]\n";
 }
 
 void subcommand_reported(char* name_memory){
