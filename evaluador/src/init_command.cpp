@@ -154,9 +154,9 @@ void command_init(char* commands[], int length){
     string sem_name_mutex = n + "_output_mutex";
     string sem_name_empty = n + "_output_empty";
     string sem_name_full  = n + "_output_fulls"; 
-    sem_t *mutex = sem_open(sem_name_mutex.c_str(), O_CREAT | O_EXCL, 0660,1); 
-    sem_t *empty = sem_open(sem_name_empty.c_str(), O_CREAT | O_EXCL, 0660, ie);
-    sem_t *full =  sem_open(sem_name_full.c_str(),  O_CREAT | O_EXCL, 0660, 0);
+    sem_open(sem_name_mutex.c_str(), O_CREAT | O_EXCL, 0660,1); 
+    sem_open(sem_name_empty.c_str(), O_CREAT | O_EXCL, 0660, ie);
+    sem_open(sem_name_full.c_str(),  O_CREAT | O_EXCL, 0660, 0);
     pthread_join(inputs_threads[0],NULL);
 }
 
