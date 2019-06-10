@@ -54,6 +54,8 @@ void subcommand_list(char* name_memory, string interactive_subcommand){
         subcommand_reactive(name_memory);
     }else if(interactive_subcommand == "all"){
         subcommand_all(name_memory);
+    }else if(interactive_subcommand == "update"){
+        
     }else{
         cerr << "Subcommand invalid\n";
         exit(EXIT_FAILURE);
@@ -184,7 +186,7 @@ void subcommand_all(char* name_memory){
 
 /** Subcomando update */
 void subcommand_update(char* name_memory, string reactive, string reactive_level){
-    if(reactive == "B" || reactive == "D" || reactive == "S"){
+    /*if(reactive == "B" || reactive == "D" || reactive == "S"){
         if(reactive_level != ""){
             cout << "name_memory: " << name_memory;
             update_reactive(reactive, stoi(reactive_level));
@@ -193,9 +195,13 @@ void subcommand_update(char* name_memory, string reactive, string reactive_level
             exit(EXIT_FAILURE);
         }
     }else{
-        cerr<<"subcommand invalid\n";
-        exit(EXIT_FAILURE);
-    }
+        int fd = shm_open(name_memory, O_RDWR, 0660);
+        void *dir = mmap(NULL, sizeof(struct head), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        head *phead = (head *) dir;
+        int _b = phead->b;
+        int _d = phead->d;
+        int _s = phead->s;
+    }*/
 }
 
 void update_reactive(string reactive, int reactive_level){
