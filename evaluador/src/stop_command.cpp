@@ -15,8 +15,4 @@ void command_stop(char* commands[], int* length){
         }
     }
     cout << "name_memory: " << n << endl;
-    //sem_unlink("vacios");
-    //sem_unlink("llenos");
-    //sem_unlink("mutex");
-    //shm_unlink("/buffer");
 }
