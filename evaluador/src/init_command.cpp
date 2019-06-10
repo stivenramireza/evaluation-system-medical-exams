@@ -124,12 +124,12 @@ void command_init(char* commands[], int length){
 
     pthread_t* inputs_threads = new pthread_t[i];
 
-    sem_t *_b[3];
-    //b[0] = sem_open(n+"_inter_b_mutex",O_CREAT | O_EXCL, 0660, 1);
-    //b[1] = sem_open(n+"_inter_b_empty",O_CREAT | O_EXCL, 0660, 1);
-    //  b[2] = sem_open(n+"_inter_b_full" ,O_CREAT | O_EXCL, 0660, 1);
-    sem_t *_d[3];
-    sem_t *_s[3];
+    sem_t *_b[3] = new sem_t*[3];
+    b[0] = sem_open(n+"_inter_b_mutex",O_CREAT | O_EXCL, 0660, 1);
+    b[1] = sem_open(n+"_inter_b_empty",O_CREAT | O_EXCL, 0660, 1);
+    b[2] = sem_open(n+"_inter_b_full" ,O_CREAT | O_EXCL, 0660, 1);
+    sem_t *_d[3] = new sem_t*[3];
+    sem_t *_s[3] = new sem_t*[3];
     
     for(int it = 0; it<i; it++){
         string sem_name_mutex = n + "_input_" + to_string(it).c_str() + "_mutex";
@@ -140,6 +140,7 @@ void command_init(char* commands[], int length){
         sem_t *full =  sem_open(sem_name_full.c_str(),  O_CREAT | O_EXCL, 0660, 0);
         Input_info* info = new Input_info(it , dir , mutex , full , empty , _b , _d , _s);
         pthread_create(&inputs_threads[it],NULL,input_thread,(void *) info);
+        phtread_join(input_thread[it],NULL);
     }
 }
 
