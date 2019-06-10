@@ -49,4 +49,5 @@ void command_stop(char* commands[], int length){
     sem_unlink(sem_name_mutex.c_str());
     sem_unlink(sem_name_empty.c_str());
     sem_unlink(sem_name_full.c_str());
+    exit(EXIT_FAILURE);
 }
