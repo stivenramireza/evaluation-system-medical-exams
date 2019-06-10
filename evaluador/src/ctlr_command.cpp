@@ -15,7 +15,6 @@ void command_ctlr(char* commands[], int length){
             }
         }
     }
-
     while(!cin.eof()){
            cout << "> ";
            getline(cin, line);

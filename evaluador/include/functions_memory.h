@@ -5,10 +5,11 @@
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
-#include <iostream>
 #include <unistd.h>
+#include <string>
+#include <sstream>
+#include <iostream>
 #include <sys/types.h>
 #include "share_memory.h"
-#include "functions_memory.h"
 
-void command_stop(char* commands[], int length);
+void open_memory(char* name_memory);
