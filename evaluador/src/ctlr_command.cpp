@@ -68,6 +68,7 @@ void subcommand_processing(char* name_memory){
 
 void subcommand_waiting(char* name_memory){
     cout << "name_memory: " << name_memory << endl;
+    
     cout << "Waiting:\n";
     cout << "[id i k q\n]\n";
 }
