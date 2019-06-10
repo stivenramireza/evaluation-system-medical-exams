@@ -123,7 +123,7 @@ void command_init(char* commands[], int length){
     pHead->end_d = 0;
     pHead->first_s = 0;
     pHead->end_s = 0;
-    pHead->stop = true;
+    pHead->stop = false;
 
     pthread_t* inputs_threads = new pthread_t[i];
 
