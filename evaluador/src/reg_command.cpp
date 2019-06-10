@@ -97,7 +97,7 @@ void RegistratorCommand::put_sample(int _queue, char ntype, int _quantity, FILE 
 }
 void RegistratorCommand::usage(){
     
-    printf("Usage: \n\tevaluator reg [-n string] {{file} | ... }\n");
+    printf("Usage: evaluator reg [-n string] {{file} | ... }\n");
 }
 void RegistratorCommand::files(int from, char ** files, int to){
 

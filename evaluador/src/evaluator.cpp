@@ -29,9 +29,9 @@ void eval_command(char* commands[], int length){
     }else if (strcmp(current_command,"ctlr") == 0){
         command_ctlr(commands,length);
     }else if (strcmp(current_command,"rep") == 0){
-        cout<<"rep command in progress\n";
+        command_rep(commands,length);
     }else if(strcmp(current_command, "stop") == 0){
-        cout<<"stop command in progress\n";
+        command_stop(commands,length);
     }else{
         cerr<<"Command " << current_command << " not found\n";
         exit(EXIT_FAILURE);
