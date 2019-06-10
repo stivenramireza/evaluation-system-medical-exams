@@ -15,6 +15,8 @@
 
 static void* input_thread(void * info);
 
+static void* inter_thread(void * info);
+
 void command_init(char* commands[], int length){
     int i=5, ie=6, oe=10, b=100, d=100, s=100, q=6;
     string n = "evaluator";
@@ -125,7 +127,7 @@ void command_init(char* commands[], int length){
     pHead->end_s = 0;
     pHead->stop = false;
 
-    pthread_t* inputs_threads = new pthread_t[i];
+    pthread_t* inputs_threads = new pthread_t[i+3];
 
     sem_t **_b = new sem_t*[3];
     _b[0] = sem_open((n+"_inter_b_mutex").c_str() ,O_CREAT | O_EXCL, 0660, 1);
@@ -151,9 +153,22 @@ void command_init(char* commands[], int length){
         Input_info* info = new Input_info(it , dir , mutex , full , empty , _b , _d , _s);
         pthread_create(&inputs_threads[it],NULL,input_thread,(void *) info);
     }
+    
+    char *dir_b = (char *)dir + size_head + ie*i*size_exam + pHead->oe*size_exam;
+    char *dir_d = (char *)dir + size_head + ie*i*size_exam + pHead->oe*size_exam + q*size_exam;
+    char *dir_s = (char *)dir + size_head + ie*i*size_exam + pHead->oe*size_exam + 2*q*size_exam;
+    
     string sem_name_mutex = n + "_output_mutex";
     string sem_name_empty = n + "_output_empty";
     string sem_name_full  = n + "_output_fulls"; 
+
+    Input_info_inter* thread_b = new Input_info_inter(_b, &(pHead->b), 'B', pHead,dir_b, 1,5);
+    pthread_create(&inputs_threads[i],NULL,inter_thread,(void *) thread_b); 
+    Input_info_inter* thread_d = new Input_info_inter(_d, &(pHead->d), 'D', pHead,dir_d, 5,20);
+    pthread_create(&inputs_threads[i+1],NULL,inter_thread,(void *) thread_d);
+    Input_info_inter* thread_s = new Input_info_inter(_s, &(pHead->s), 'S', pHead, dir_s, 8,25);
+    pthread_create(&inputs_threads[i+2],NULL,inter_thread,(void *) thread_s);
+    
     sem_open(sem_name_mutex.c_str(), O_CREAT | O_EXCL, 0660,1); 
     sem_open(sem_name_empty.c_str(), O_CREAT | O_EXCL, 0660, ie);
     sem_open(sem_name_full.c_str(),  O_CREAT | O_EXCL, 0660, 0);
@@ -177,9 +192,9 @@ static void* input_thread(void *input){
     sem_t** d = info->d;
     sem_t** s = info->s;
     char *input_array = init_pos + head_size + input_number*length_array*exam_size;
-    char *dir_b = (char *)(init_pos + head_size + length_array*(phead->i)*exam_size + phead->oe*exam_size);
-    char *dir_d = (char *)(init_pos + head_size + length_array*(phead->i)*exam_size + phead->oe*exam_size + (phead->q)*exam_size);
-    char *dir_s = (char *)(init_pos + head_size + length_array*(phead->i)*exam_size + phead->oe*exam_size + 2*(phead->q)*exam_size);
+    char *dir_b = (char *)init_pos + head_size + length_array*(phead->i)*exam_size + phead->oe*exam_size;
+    char *dir_d = (char *)init_pos + head_size + length_array*(phead->i)*exam_size + phead->oe*exam_size + (phead->q)*exam_size;
+    char *dir_s = (char *)init_pos + head_size + length_array*(phead->i)*exam_size + phead->oe*exam_size + 2*(phead->q)*exam_size;
     exam current_exam;
     exam *pinter_q;
     while(!phead->stop){
@@ -227,3 +242,63 @@ static void* input_thread(void *input){
     }
     return NULL;
 }   
+
+static void* inter_thread(void * input){
+    Input_info_inter* info = (Input_info_inter *) input;
+    char* dir = info->current_dir;
+    head *header = info->header;
+    sem_t **sem = info->sem;
+    char type = info->type;
+    int first;
+    sem_t *mutex_o = sem_open("_output_mutex",0);
+    sem_t *empty_o = sem_open("_output_empty",0);
+    sem_t *full_o  = sem_open("_output_fulls",0);
+    char* dir_output = (char *)header + sizeof(head) + (header->ie)*(header->i)*sizeof(exam);    
+    exam current_exam;
+    exam* output_exam;
+    sem_wait(sem[2]);
+    sem_wait(sem[0]);
+        if(type == 'B'){
+            sem_wait(empty_o);
+            sem_wait(mutex_o);
+            first = header->first_b;
+            current_exam = *((exam*)(dir + first*sizeof(exam)));
+            output_exam =  (exam*)(dir_output+ header->end_o);
+            //evaluacion
+            *output_exam = current_exam;
+            header->end_o = (header->end_o + 1)%header->oe;
+            header->end_d = (header->end_d + 1) % header->oe;
+            sem_post(mutex_o);
+            sem_post(full_o);
+        }
+        else if(type == 'D'){
+            sem_wait(empty_o);
+            sem_wait(mutex_o);
+            first = header->end_d;
+            current_exam = *((exam*)(dir + first*sizeof(exam)));
+            output_exam =  (exam*)(dir_output + header->end_o);
+            //evaluacion
+            *output_exam = current_exam;
+            header->end_o = (header->end_o + 1)%header->oe;            
+            header->end_d = (header->end_d + 1) % header->oe;
+            sem_post(mutex_o);
+            sem_post(full_o);
+        }
+        else if(type == 'S'){
+            sem_wait(empty_o);
+            sem_wait(mutex_o);
+            first = header->end_d;
+            current_exam = *((exam*)(dir + first*sizeof(exam)));
+            output_exam =  (exam*)(dir_output + header->end_o);
+            //evaluacion
+            *output_exam = current_exam;
+            header->end_o = (header->end_o + 1)%header->oe;
+            header->end_d = (header->end_d + 1) % header->oe;
+            sem_post(mutex_o);
+            sem_post(full_o);
+        }
+    sem_post(sem[0]);
+    sem_post(sem[1]);
+    
+    return NULL;
+}
