@@ -61,21 +61,25 @@ void subcommand_list(char* name_memory, string interactive_subcommand){
 }
 
 void subcommand_processing(char* name_memory){
+    cout << "name_memory: " << name_memory << endl;
     cout << "Processing:\n";
     cout << "[id i k q p\n]\n";
 }
 
 void subcommand_waiting(char* name_memory){
+    cout << "name_memory: " << name_memory << endl;
     cout << "Waiting:\n";
     cout << "[id i k q\n]\n";
 }
 
 void subcommand_reported(char* name_memory){
+    cout << "name_memory: " << name_memory << endl;
     cout << "Reported:\n";
     cout << "[id i k r\n]\n";
 }
 
 void subcommand_reactive(char* name_memory){
+    cout << "name_memory: " << name_memory << endl;
     cout << 100 << endl;;
 }
 

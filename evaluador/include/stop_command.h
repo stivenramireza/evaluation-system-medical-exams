@@ -9,6 +9,5 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include "share_memory.h"
-#include "functions_memory.h"
 
 void command_stop(char* commands[], int length);
