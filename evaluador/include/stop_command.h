@@ -10,4 +10,4 @@
 #include <sys/types.h>
 #include "share_memory.h"
 
-void command_stop(char* commands[], int* length);
+void command_stop(char* commands[], int length);
