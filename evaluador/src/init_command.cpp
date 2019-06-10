@@ -163,6 +163,7 @@ static void* input_thread(void *input){
         sem_wait(mutex);
         current_exam = *((exam *) (input_array + *last*exam_size));
         cout<<"Pila "<<current_exam.id<<endl;
+        *last = (*last + 1) % length_array;
         char type = current_exam.type;
         if(type == 'b'){
 

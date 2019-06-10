@@ -78,7 +78,7 @@ void RegistratorCommand::put_sample(int _queue, char ntype, int _quantity){
     sem_wait(reg_sems_mutex[_queue]);
     int *in = (int *)(inputs_dirs + _i_ * _ie_ * exam_size + 3 * _q_ * exam_size + _queue * sizeof(int));
     //cerr << *in << endl;
-    exam *_exam = (exam *) (inputs_dirs + (_i_ * _queue * exam_size) + (*in * exam_size));
+    exam *_exam = (exam *) (inputs_dirs + (_ie_ * _queue * exam_size) + (*in * exam_size));
     *in = (*in + 1) % _ie_;
     _exam->id = _uuid;
     _exam->_queue = _queue;
@@ -128,7 +128,7 @@ void RegistratorCommand::start(){
         exam* pExam;
         for(int it = 0; it < _i_; it++){
             for(int it2 = 0; it2 < _ie_; it2 ++){
-                pExam = (exam *)(dir_entradas + _i_ * it * size_exam + it2 * size_exam);
+                pExam = (exam *)(dir_entradas + _ie_ * it * size_exam + it2 * size_exam);
                 pExam->id = -1;
                 pExam->type = 'U';
                 pExam->_queue = -1;
@@ -141,14 +141,14 @@ void RegistratorCommand::start(){
         // ::::::::::::::::::::::: TEST :::::::::::::::::::::::::::
         cout << ":;:::::::::::::::::::::::::: ::::::::::::::::::::::" << endl;
         for(int it = 0; it < _i_; it++){
-            for(int it2 = 0; it2 < _ie_; it2 ++){
+            for(int it2 = 0; it2 < _ie_; it2++){
                 //printf("%d ", it2);
-                exam * pExamp = (exam *)(dir_entradas + _i_ * it * size_exam + it2 * size_exam);
-                if(pExamp->id != -1){
-                    cout << pExamp << endl;
-                    cout << size_exam << endl;
-                    cout << pExamp->id << " " << pExamp->_queue << " " << pExamp->type << " " << pExamp->_quant << endl;
-                }
+                exam * pExamp = (exam *)(dir_entradas + _ie_ * it * size_exam + it2 * size_exam);
+                //if(pExamp->id != -1){
+                cout << pExamp << endl;
+                cout << size_exam << endl;
+                cout << pExamp->id << " " << pExamp->_queue << " " << pExamp->type << " " << pExamp->_quant << endl;
+                //}
             }
             //cout << endl << endl;
         }
